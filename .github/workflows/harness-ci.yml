@@ -1,0 +1,50 @@
+name: harness-ci
+
+# Verifies the repo's own structural rules from CLAUDE.md: every concept
+# folder has a README, and every JSON file in the repo actually parses.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Every concept folder has a README.md
+        run: |
+          missing=0
+          for dir in 0*/; do
+            if [ ! -f "${dir}README.md" ]; then
+              echo "MISSING README: ${dir}"
+              missing=1
+            fi
+          done
+          if [ "$missing" -eq 1 ]; then
+            echo "One or more concept folders is missing a README.md"
+            exit 1
+          fi
+          echo "All concept folders have a README.md"
+
+      - name: All JSON files are valid
+        run: |
+          fail=0
+          while IFS= read -r -d '' file; do
+            if ! python -m json.tool "$file" > /dev/null; then
+              echo "INVALID JSON: $file"
+              fail=1
+            fi
+          done < <(find . -name "*.json" -not -path "*/node_modules/*" -print0)
+          if [ "$fail" -eq 1 ]; then
+            echo "One or more JSON files failed to parse"
+            exit 1
+          fi
+          echo "All JSON files are valid"

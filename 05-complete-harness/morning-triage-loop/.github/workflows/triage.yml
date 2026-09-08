@@ -1,0 +1,43 @@
+name: morning-triage
+
+# Runs the daily-triage skill unattended every weekday morning. This is the
+# scheduling half of "unattended agent" - the harness config in .claude/
+# is what makes running it with no human watching actually safe.
+on:
+  schedule:
+    - cron: "0 13 * * 1-5"  # 13:00 UTC, Mon-Fri (adjust for your timezone)
+  workflow_dispatch: {}       # allow manual trigger for testing
+
+permissions:
+  issues: write
+  contents: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run daily triage skill
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude --print "Run the daily-triage skill" \
+            --settings .claude/settings.json
+
+      - name: Commit progress.md updates
+        run: |
+          git config user.name "morning-triage-bot"
+          git config user.email "actions@github.com"
+          git add progress.md run-log.jsonl 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "chore: update triage progress log"
+          git push

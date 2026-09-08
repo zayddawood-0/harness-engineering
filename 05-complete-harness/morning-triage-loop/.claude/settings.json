@@ -1,0 +1,52 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(./**)",
+      "Bash(npm test)",
+      "Bash(npm run lint)",
+      "Bash(git diff)",
+      "Bash(git diff:*)",
+      "Bash(git status)",
+      "Bash(git log:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh issue view:*)"
+    ],
+    "ask": [
+      "Bash(gh issue comment:*)",
+      "Bash(gh issue close:*)",
+      "WebFetch"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/*.pem)",
+      "Edit(./**)",
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[hook] logged bash call to run-log.jsonl\" >> run-log.jsonl"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npm test -q || { echo 'CORRECT: tests failing, agent may not stop until resolved or escalated to progress.md'; exit 2; }"
+          }
+        ]
+      }
+    ]
+  }
+}

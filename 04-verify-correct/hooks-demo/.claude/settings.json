@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "eslint --no-error-on-unmatched-pattern \"$CLAUDE_FILE_PATH\" || echo 'VERIFY: eslint found issues in the file you just edited - fix them before continuing.'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pytest -q || { echo 'CORRECT: tests are failing - not allowed to stop until pytest passes or a human overrides.'; exit 2; }"
+          }
+        ]
+      }
+    ]
+  }
+}

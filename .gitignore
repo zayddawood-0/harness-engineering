@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.env
+.env.*
+06-observability/logging-demo/run-log.jsonl

@@ -1,0 +1,36 @@
+{
+  "_comment_allow": "ALLOW: actions that are read-only or trivially reversible. Even if the agent picks the wrong moment to run these, nothing is lost - low blast radius means no gate needed.",
+  "permissions": {
+    "allow": [
+      "Read(./**)",
+      "Bash(git status)",
+      "Bash(git diff)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(npm test)",
+      "Bash(npm test:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)"
+    ],
+
+    "_comment_ask": "ASK: actions that are reversible but visible to others, cost money, or touch shared state. A human should be in the loop once per occurrence, not blocked forever - medium blast radius.",
+    "ask": [
+      "WebFetch",
+      "Bash(npm install:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Edit(./src/**)"
+    ],
+
+    "_comment_deny": "DENY: actions that are irreversible, leak secrets, or affect systems outside this project entirely. No prompt is worth the risk - high blast radius means the rule fires with no exception, every time.",
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/*.pem)",
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(curl:* | sh)"
+    ]
+  }
+}

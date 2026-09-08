@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(./**)",
+      "Bash(npm test)",
+      "Bash(npm test:*)",
+      "Bash(git diff)",
+      "Bash(git diff:*)",
+      "Bash(git status)",
+      "Bash(git log:*)"
+    ],
+    "ask": [
+      "WebFetch",
+      "Bash(git push:*)",
+      "Bash(npm install:*)",
+      "Edit(./**)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/*.pem)",
+      "Read(./**/*_key)",
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)"
+    ]
+  }
+}
