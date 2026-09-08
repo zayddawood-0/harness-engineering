@@ -1,6 +1,4 @@
-# Harness Engineering — Crash Course Examples
-
-A practical companion repo for the [Panaversity Agentic AI Harness Engineering crash course](https://agentfactory.panaversity.org/docs/harness-engineering-crash-course).
+# Harness Engineering —Examples
 
 Every folder in this repo teaches one idea with runnable code. Each example follows the same pattern:
 
